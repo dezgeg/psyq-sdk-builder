@@ -25,7 +25,7 @@ tarballs: $(addsuffix .tar.gz,$(addprefix tarballs/psyq-,$(VERSIONS)))
 
 dl/%:
 	mkdir -p dl
-	wget $(URL_$*) -O $@
+	wget --progress=dot:mega $(URL_$*) -O $@
 
 extracted/%: dl/%
 	mkdir -p $@
