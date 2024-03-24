@@ -10,12 +10,13 @@ jobs:
         steps:
             - run: sudo apt-get install -y 7zip lhasa iat rename
             - uses: actions/checkout@v4
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               with:
                   key: dl
                   path: dl/*
             - run: find .
             - run: make tarballs
+            - run: find .
             - uses: actions/upload-artifact@v4
               with:
                   path: tarballs/*.tar.gz
