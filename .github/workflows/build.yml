@@ -1,4 +1,9 @@
-on: [push]
+on:
+    push:
+        branches:
+            - master
+permissions:
+    contents: write
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -8,7 +13,7 @@ jobs:
             - uses: actions/cache@v3
               with:
                   key: dl
-                  path: dl
+                  path: dl/*
             - run: find .
             - run: make tarballs
             - uses: actions/upload-artifact@v4
