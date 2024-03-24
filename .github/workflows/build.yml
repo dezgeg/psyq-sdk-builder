@@ -14,13 +14,10 @@ jobs:
               with:
                   key: dl
                   path: dl/*
-            - run: find .
+            - run: git log -1 --format=%cd --date=format:tag=%Y.%m.%d.%H.%M.%S >> $GITHUB_OUTPUT
+              id: tag
             - run: make tarballs
-            - run: find .
-            - uses: actions/upload-artifact@v4
-              with:
-                  path: tarballs/*.tar.gz
             - uses: ncipollo/release-action@v1
               with:
                   artifacts: tarballs/*.tar.gz
-                  tag: 1.${{ github.sha }}
+                  tag: ${{ steps.tag.outputs.tag }}
