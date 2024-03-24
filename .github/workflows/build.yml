@@ -9,10 +9,12 @@ jobs:
               with:
                   key: dl
                   path: dl
+            - run: find .
             - run: make tarballs
             - uses: actions/upload-artifact@v4
               with:
                   path: tarballs/*.tar.gz
-            - uses: ncipollo/release-action@v1.14.0
+            - uses: ncipollo/release-action@v1
               with:
                   artifacts: tarballs/*.tar.gz
+                  tag: 1.${{ github.ref }}
