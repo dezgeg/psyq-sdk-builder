@@ -1,4 +1,5 @@
 .SUFFIXES:
+.SECONDARY:
 SHELL := /bin/bash -O nullglob
 
 #VERSIONS := 20 26 30 33 35 36 40 41 42 43 44 46 47
