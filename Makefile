@@ -2,8 +2,7 @@
 .SECONDARY:
 SHELL := /bin/bash -O nullglob
 
-#VERSIONS := 20 26 30 33 35 36 40 41 42 43 44 46 47
-VERSIONS := 40 41 42 43 44 46 47
+VERSIONS := 20 26 30 33 35 36 40 41 42 43 44 46 47
 URL_20 := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%202.0%20%28Japan%29%20%28En%2CJa%29_DTL-S2160_redump.zip
 URL_26 := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%202.6%20%28Japan%29%20%28En%2CJa%29_DTL-S2170_redump.zip
 URL_30 := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%203.0%20%28Japan%29%20%28En%2CJa%29_DTL-S2180_redump.zip
