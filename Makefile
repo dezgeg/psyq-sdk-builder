@@ -66,7 +66,7 @@ output/%: extracted/%
 
 tarballs/psyq-%.tar.gz: output/%
 	@mkdir -p tarballs/
-	tar -C $< -cvzf $@ .
+	tar -C $< -czf $@ .
 
 wibo/build/wibo:
 	cmake wibo -B wibo/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DCMAKE_EXE_LINKER_FLAGS="-static"
