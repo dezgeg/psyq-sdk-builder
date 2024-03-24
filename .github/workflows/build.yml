@@ -3,7 +3,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - run: sudo apt-get install -y 7zip lhasa iat
+            - run: sudo apt-get install -y 7zip lhasa iat rename
             - uses: actions/checkout@v4
             - uses: actions/cache@v3
               with:
