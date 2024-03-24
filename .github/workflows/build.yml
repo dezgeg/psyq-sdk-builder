@@ -13,3 +13,6 @@ jobs:
             - uses: actions/upload-artifact@v4
               with:
                   path: tarballs/*.tar.gz
+            - uses: ncipollo/release-action@v1.14.0
+              with:
+                  artifacts: tarballs/*.tar.gz
