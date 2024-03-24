@@ -1,0 +1,3 @@
+[submodule "wibo"]
+	path = wibo
+	url = https://github.com/decompals/wibo.git

@@ -1,7 +1,8 @@
 .SUFFIXES:
-SHELL := /bin/bash
+SHELL := /bin/bash -O nullglob
 
-VERSIONS := 20 26 30 33 35 36 40 41 42 43 44 46 47
+#VERSIONS := 20 26 30 33 35 36 40 41 42 43 44 46 47
+VERSIONS := 47
 URL_20 := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%202.0%20%28Japan%29%20%28En%2CJa%29_DTL-S2160_redump.zip
 URL_26 := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%202.6%20%28Japan%29%20%28En%2CJa%29_DTL-S2170_redump.zip
 URL_30 := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%203.0%20%28Japan%29%20%28En%2CJa%29_DTL-S2180_redump.zip
@@ -18,6 +19,9 @@ URL_47 := https://archive.org/download/ps1_sdks/Runtime%20Library%204.7.zip
 
 .PHONY: all
 all: $(addprefix output/,$(VERSIONS))
+
+.PHONY: tarballs
+tarballs: $(addsuffix .tar.gz,$(addprefix tarballs/psyq-,$(VERSIONS)))
 
 dl/%:
 	mkdir -p dl
@@ -54,5 +58,22 @@ output/%: extracted/%
 	-rm -rf $@/LIB/OLD_LIBS $@/LIB/*.TXT $@/LIB/*.PDF
 	# Copy the toolchain
 	-cp $</{COMPILER,GNU,PSSN,PSSN/BIN,PSX/BIN,PSYQ}/{ASPSX,ASMPSX,CC1PLPSX,CC1PSX,CCPSX,CPLUSPSX,CPPPSX,DMPSX,DUMPOBJ,PSYLINK,PSYLIB,PSYMAKE}.EXE $@/BIN
+	-chmod a+rx $@/BIN/*
 	# Don't have empty BIN/ for libs-only releases
 	-rmdir $@/BIN
+	# Install lowercase-named wibo wrapper for each .EXE
+	-for exe in $@/BIN/*.EXE; do cp wibo/build/wibo $@/; cp wrapper.sh $@/`basename -s.EXE $$exe | tr A-Z a-z`; done
+
+tarballs/psyq-%.tar.gz: output/%
+	@mkdir -p tarballs/
+	tar -C $< -cvzf $@ .
+
+wibo/build/wibo:
+	cmake wibo -B wibo/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DCMAKE_EXE_LINKER_FLAGS="-static"
+	make -C wibo/build
+
+.PHONY: clean
+clean:
+	rm -rf wibo/build
+	rm -rf extracted
+	rm -rf output

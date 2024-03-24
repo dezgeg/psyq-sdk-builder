@@ -1,0 +1,13 @@
+on: [push]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/cache@v3
+              with:
+                  path: dl
+            - run: make tarballs
+            - uses: actions/upload-artifact@v4
+              with:
+                  path: tarballs/*.tar.gz
