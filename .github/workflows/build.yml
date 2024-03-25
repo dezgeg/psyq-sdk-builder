@@ -10,6 +10,8 @@ jobs:
         steps:
             - run: sudo apt-get install -y 7zip lhasa iat rename
             - uses: actions/checkout@v4
+              with:
+                  submodules: true
             - uses: actions/cache@v4
               with:
                   key: dl

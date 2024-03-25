@@ -40,7 +40,7 @@ extracted/%: dl/%
 	rename -d y/a-z/A-Z/ $@/*/*
 	rename -d y/a-z/A-Z/ $@/*/*/*
 
-output/%: extracted/%
+output/%: extracted/% wibo/build/wibo
 	mkdir -p $@/BIN
 	# Copy the libs for 4.2 & 4.7
 	-cp -r $</{LIB,INCLUDE} $@/
