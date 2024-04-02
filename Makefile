@@ -61,6 +61,8 @@ output/%: extracted/% wibo/build/wibo
 	-chmod a+rx $@/BIN/*
 	# Don't have empty BIN/ for libs-only releases
 	-rmdir $@/BIN
+	# Newer versions refuse to work without
+	-touch $@/BIN/PSYQ.INI
 	# Install lowercase-named wibo wrapper for each .EXE
 	-for exe in $@/BIN/*.EXE; do cp wibo/build/wibo $@/; cp wrapper.sh $@/`basename -s.EXE $$exe | tr A-Z a-z`; done
 
