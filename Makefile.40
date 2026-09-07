@@ -11,15 +11,20 @@ tarballs/psyq-40.tar.gz: output/40
 	@mkdir -p tarballs/
 	tar -C $< -czf $@ .
 
-output/40: extracted/40 wibo/build/wibo
+output/40: extracted/40 wibo/build/wibo convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser
 	mkdir -p $@/{BIN,COFF}
 	cp -r $</PSX/{LIB,INCLUDE} $@/
 	rm -rf $@/LIB/OLD_LIBS $@/LIB/*.TXT $@/LIB/*.PDF
+	./convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser $@/LIB $@/ELF
 	cp -r $</3RDPARTY/METROWER/{LIB,INCLUDE,README.TXT} $@/COFF/
 	cp $</PSSN/BIN/{ASMPSX,ASPSX,DUMPOBJ,PSYLIB,PSYLINK,PSYMAKE}.EXE $</GNU/{CC1PLPSX,CC1PSX,CCPSX,CPLUSPSX,CPPPSX}.EXE $</PSX/BIN/DMPSX.EXE $@/BIN/
 	chmod a+rx $@/BIN/*
 	touch $@/BIN/PSYQ.INI
 	for exe in $@/BIN/*.EXE; do cp wibo/build/wibo $@/; cp wrapper.sh $@/`basename -s.EXE $$exe | tr A-Z a-z`; done
+
+pcsx-redux/bins/Release/psyq-obj-parser:
+	cd pcsx-redux && git submodule update --init third_party/fmt third_party/ELFIO third_party/magic_enum third_party/ucl
+	$(MAKE) -C pcsx-redux bins/Release/psyq-obj-parser HAS_SUBMODULES=true
 
 extracted/40: dl/40
 	mkdir -p $@

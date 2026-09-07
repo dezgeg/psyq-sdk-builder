@@ -11,9 +11,14 @@ tarballs/psyq-20.tar.gz: output/20
 	@mkdir -p tarballs/
 	tar -C $< -czf $@ .
 
-output/20: extracted/20
+output/20: extracted/20 convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser
 	mkdir -p $@
 	cp -r $</{LIB,INCLUDE} $@/
+	./convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser $@/LIB $@/ELF
+
+pcsx-redux/bins/Release/psyq-obj-parser:
+	cd pcsx-redux && git submodule update --init third_party/fmt third_party/ELFIO third_party/magic_enum third_party/ucl
+	$(MAKE) -C pcsx-redux bins/Release/psyq-obj-parser HAS_SUBMODULES=true
 
 extracted/20: dl/20
 	mkdir -p $@

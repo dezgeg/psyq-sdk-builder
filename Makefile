@@ -22,6 +22,10 @@ dl/%:
 extracted/%:
 	$(MAKE) -f Makefile.$* $@
 
+pcsx-redux/bins/Release/psyq-obj-parser:
+	cd pcsx-redux && git submodule update --init third_party/fmt third_party/ELFIO third_party/magic_enum third_party/ucl
+	$(MAKE) -C pcsx-redux bins/Release/psyq-obj-parser HAS_SUBMODULES=true
+
 .PHONY: clean
 clean:
 	rm -rf wibo/build

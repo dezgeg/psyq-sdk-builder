@@ -11,14 +11,19 @@ tarballs/psyq-35.tar.gz: output/35
 	@mkdir -p tarballs/
 	tar -C $< -czf $@ .
 
-output/35: extracted/35 wibo/build/wibo extract_news.py
+output/35: extracted/35 wibo/build/wibo extract_news.py convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser
 	mkdir -p $@/BIN
 	cp -r $</PSX/{LIB,INCLUDE} $@/
 	./extract_news.py $</NEWS/NEWSLIB.Z $@/NEWS
+	./convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser $@/LIB $@/ELF
 	cp $</PSX/BIN/DMPSX.EXE $</PSYQ/{ASMPSX,ASPSX,CCPSX,DUMPOBJ,PSYLIB,PSYLINK}.EXE $@/BIN/
 	chmod a+rx $@/BIN/*
 	touch $@/BIN/PSYQ.INI
 	for exe in $@/BIN/*.EXE; do cp wibo/build/wibo $@/; cp wrapper.sh $@/`basename -s.EXE $$exe | tr A-Z a-z`; done
+
+pcsx-redux/bins/Release/psyq-obj-parser:
+	cd pcsx-redux && git submodule update --init third_party/fmt third_party/ELFIO third_party/magic_enum third_party/ucl
+	$(MAKE) -C pcsx-redux bins/Release/psyq-obj-parser HAS_SUBMODULES=true
 
 extracted/35: dl/35
 	mkdir -p $@

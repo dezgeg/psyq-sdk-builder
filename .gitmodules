@@ -1,3 +1,7 @@
 [submodule "wibo"]
 	path = wibo
 	url = https://github.com/decompals/wibo.git
+[submodule "pcsx-redux"]
+	path = pcsx-redux
+	url = https://github.com/dezgeg/pcsx-redux.git
+	branch = psyq-obj-parser-comm-support-variant0

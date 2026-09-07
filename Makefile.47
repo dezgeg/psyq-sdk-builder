@@ -11,10 +11,15 @@ tarballs/psyq-47.tar.gz: output/47
 	@mkdir -p tarballs/
 	tar -C $< -czf $@ .
 
-output/47: extracted/47
+output/47: extracted/47 convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser
 	mkdir -p $@
 	cp -r $</{LIB,INCLUDE} $@/
 	rm -rf $@/LIB/*.TXT
+	./convert_libs.py pcsx-redux/bins/Release/psyq-obj-parser $@/LIB $@/ELF
+
+pcsx-redux/bins/Release/psyq-obj-parser:
+	cd pcsx-redux && git submodule update --init third_party/fmt third_party/ELFIO third_party/magic_enum third_party/ucl
+	$(MAKE) -C pcsx-redux bins/Release/psyq-obj-parser HAS_SUBMODULES=true
 
 extracted/47: dl/47
 	mkdir -p $@
