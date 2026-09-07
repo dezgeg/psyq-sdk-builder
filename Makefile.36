@@ -11,9 +11,10 @@ tarballs/psyq-36.tar.gz: output/36
 	@mkdir -p tarballs/
 	tar -C $< -czf $@ .
 
-output/36: extracted/36 wibo/build/wibo
+output/36: extracted/36 wibo/build/wibo extract_news.py
 	mkdir -p $@/BIN
 	cp -r $</PSX/{LIB,INCLUDE} $@/
+	./extract_news.py $</NEWS/NEWSLIB.Z $@/NEWS
 	cp $</PSX/BIN/DMPSX.EXE $</PSYQ/{ASMPSX,ASPSX,CCPSX,DUMPOBJ,PSYLIB,PSYLINK}.EXE $@/BIN/
 	chmod a+rx $@/BIN/*
 	touch $@/BIN/PSYQ.INI
