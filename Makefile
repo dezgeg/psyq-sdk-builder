@@ -71,7 +71,7 @@ tarballs/psyq-%.tar.gz: output/%
 	tar -C $< -czf $@ .
 
 wibo/build/wibo:
-	cmake wibo -B wibo/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DCMAKE_EXE_LINKER_FLAGS="-static"
+	cmake wibo -B wibo/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0" -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DCMAKE_EXE_LINKER_FLAGS="-static"
 	make -C wibo/build
 
 .PHONY: clean
@@ -79,3 +79,25 @@ clean:
 	rm -rf wibo/build
 	rm -rf extracted
 	rm -rf output
+
+DOCKER_IMAGE ?= psyq-sdk-builder
+
+.PHONY: docker-image
+docker-image:
+	docker build -t $(DOCKER_IMAGE) .
+
+.PHONY: docker-build
+docker-build: docker-image
+	docker run --rm --user $(shell id -u):$(shell id -g) -v "$$(pwd)":/src -w /src $(DOCKER_IMAGE) make all
+
+.PHONY: docker-tarballs
+docker-tarballs: docker-image
+	docker run --rm --user $(shell id -u):$(shell id -g) -v "$$(pwd)":/src -w /src $(DOCKER_IMAGE) make tarballs
+
+.PHONY: docker-shell
+docker-shell: docker-image
+	docker run --rm -it --user $(shell id -u):$(shell id -g) -v "$$(pwd)":/src -w /src $(DOCKER_IMAGE) bash
+
+.PHONY: docker-run
+docker-run: docker-image
+	docker run --rm -it --user $(shell id -u):$(shell id -g) -v "$$(pwd)":/src -w /src $(DOCKER_IMAGE) $(CMD)
