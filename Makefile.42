@@ -1,0 +1,34 @@
+.SUFFIXES:
+.SECONDARY:
+SHELL := /bin/bash
+
+URL := https://archive.org/download/play-station-programmer-tool-runtime-library-version-4.2.7z/PlayStation_Programmer_Tool_-_Runtime_Library_Version_4.2.7z
+
+.PHONY: all
+all: tarballs/psyq-42.tar.gz
+
+tarballs/psyq-42.tar.gz: output/42
+	@mkdir -p tarballs/
+	tar -C $< -czf $@ .
+
+output/42: extracted/42
+	mkdir -p $@
+	cp -r $</{LIB,INCLUDE} $@/
+	unzip -d $@ -o $@/LIB/42PATCH/J421PD.ZIP
+	unzip -d $@ -o $@/LIB/42PATCH/J421DS.ZIP
+	unzip -d $@ -o $@/LIB/MC42PTCH/MCRD421.ZIP
+	mv $@/*.H $@/INCLUDE/
+	mv $@/*.LIB $@/LIB/
+	rm -rf $@/*.txt $@/LIB/42PATCH $@/LIB/MC42PTCH
+
+extracted/42: dl/42
+	mkdir -p $@
+	7z x -o$@ $<
+
+dl/42:
+	mkdir -p dl
+	wget --progress=dot:mega "$(URL)" -O $@
+
+.PHONY: clean
+clean:
+	rm -rf extracted/42 output/42 tarballs/psyq-42.tar.gz

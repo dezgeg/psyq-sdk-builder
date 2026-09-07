@@ -1,0 +1,29 @@
+.SUFFIXES:
+.SECONDARY:
+SHELL := /bin/bash
+
+URL := https://archive.org/download/ps1_sdks/Runtime%20Library%204.7.zip
+
+.PHONY: all
+all: tarballs/psyq-47.tar.gz
+
+tarballs/psyq-47.tar.gz: output/47
+	@mkdir -p tarballs/
+	tar -C $< -czf $@ .
+
+output/47: extracted/47
+	mkdir -p $@
+	cp -r $</{LIB,INCLUDE} $@/
+	rm -rf $@/LIB/*.TXT
+
+extracted/47: dl/47
+	mkdir -p $@
+	7z x -o$@ $<
+
+dl/47:
+	mkdir -p dl
+	wget --progress=dot:mega "$(URL)" -O $@
+
+.PHONY: clean
+clean:
+	rm -rf extracted/47 output/47 tarballs/psyq-47.tar.gz

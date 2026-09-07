@@ -1,0 +1,42 @@
+.SUFFIXES:
+.SECONDARY:
+SHELL := /bin/bash
+
+URL := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%204.3%20%28Japan%29_DTL-S2340_redump.zip
+
+.PHONY: all
+all: tarballs/psyq-43.tar.gz
+
+tarballs/psyq-43.tar.gz: output/43
+	@mkdir -p tarballs/
+	tar -C $< -czf $@ .
+
+output/43: extracted/43 wibo/build/wibo
+	mkdir -p $@/BIN
+	cp -r $</PSX/{LIB,INCLUDE} $@/
+	cp $</COMPILER/{CC1PLPSX,CC1PSX,CPPPSX}.EXE $</PSSN/{ASMPSX,ASPSX,CCPSX,DUMPOBJ,PSYLIB,PSYLINK}.EXE $</PSX/BIN/DMPSX.EXE $@/BIN/
+	chmod a+rx $@/BIN/*
+	touch $@/BIN/PSYQ.INI
+	for exe in $@/BIN/*.EXE; do cp wibo/build/wibo $@/; cp wrapper.sh $@/`basename -s.EXE $$exe | tr A-Z a-z`; done
+
+extracted/43: dl/43
+	mkdir -p $@
+	7z e -o$@ -i!'*Track 1*.bin' $<
+	iat $@/*.bin $@/fs.iso
+	-7z x -o$@ $@/fs.iso
+	rename -d y/a-z/A-Z/ $@/*
+	rename -d y/a-z/A-Z/ $@/*/*
+	rename -d y/a-z/A-Z/ $@/*/*/*
+	rm -f $@/*.bin $@/fs.iso
+
+dl/43:
+	mkdir -p dl
+	wget --progress=dot:mega "$(URL)" -O $@
+
+wibo/build/wibo:
+	cmake wibo -B wibo/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0" -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DCMAKE_EXE_LINKER_FLAGS="-static"
+	make -C wibo/build
+
+.PHONY: clean
+clean:
+	rm -rf extracted/43 output/43 tarballs/psyq-43.tar.gz

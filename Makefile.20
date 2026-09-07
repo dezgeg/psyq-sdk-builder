@@ -1,0 +1,35 @@
+.SUFFIXES:
+.SECONDARY:
+SHELL := /bin/bash
+
+URL := https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%202.0%20%28Japan%29%20%28En%2CJa%29_DTL-S2160_redump.zip
+
+.PHONY: all
+all: tarballs/psyq-20.tar.gz
+
+tarballs/psyq-20.tar.gz: output/20
+	@mkdir -p tarballs/
+	tar -C $< -czf $@ .
+
+output/20: extracted/20
+	mkdir -p $@
+	cp -r $</{LIB,INCLUDE} $@/
+
+extracted/20: dl/20
+	mkdir -p $@
+	7z x -o$@ $<
+	iat $@/*.bin $@/fs.iso
+	-7z x -o$@ $@/fs.iso
+	lha xw=$@ $@/PSX.LZH
+	rename -d y/a-z/A-Z/ $@/*
+	rename -d y/a-z/A-Z/ $@/*/*
+	rename -d y/a-z/A-Z/ $@/*/*/*
+	rm -f $@/*.bin $@/fs.iso $@/PSX.LZH
+
+dl/20:
+	mkdir -p dl
+	wget --progress=dot:mega "$(URL)" -O $@
+
+.PHONY: clean
+clean:
+	rm -rf extracted/20 output/20 tarballs/psyq-20.tar.gz
