@@ -14,6 +14,7 @@ tarballs/psyq-40.tar.gz: output/40
 output/40: extracted/40 wibo/build/wibo
 	mkdir -p $@/BIN
 	cp -r $</PSX/{LIB,INCLUDE} $@/
+	rm -rf $@/LIB/OLD_LIBS $@/LIB/*.TXT $@/LIB/*.PDF
 	cp $</PSSN/BIN/{ASMPSX,ASPSX,DUMPOBJ,PSYLIB,PSYLINK,PSYMAKE}.EXE $</GNU/{CC1PLPSX,CC1PSX,CCPSX,CPLUSPSX,CPPPSX}.EXE $</PSX/BIN/DMPSX.EXE $@/BIN/
 	chmod a+rx $@/BIN/*
 	touch $@/BIN/PSYQ.INI

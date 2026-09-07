@@ -19,6 +19,9 @@ output/47: extracted/47
 extracted/47: dl/47
 	mkdir -p $@
 	7z x -o$@ $<
+	rename -d y/a-z/A-Z/ $@/*
+	rename -d y/a-z/A-Z/ $@/*/*
+	rename -d y/a-z/A-Z/ $@/*/*/*
 
 dl/47:
 	mkdir -p dl
