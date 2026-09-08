@@ -2,24 +2,27 @@ on:
     push:
         branches:
             - master
+    workflow_dispatch:
 permissions:
     contents: write
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - run: sudo apt-get install -y 7zip lhasa iat rename gcc-multilib g++-multilib
             - uses: actions/checkout@v4
               with:
                   submodules: true
             - uses: actions/cache@v4
               with:
-                  key: dl
-                  path: dl/*
+                  path: dl
+                  key: dl-${{ hashFiles('Makefile*') }}
+                  restore-keys: |
+                      dl-
             - run: git log -1 --format=%cd --date=format:tag=%Y.%m.%d.%H.%M.%S >> $GITHUB_OUTPUT
               id: tag
-            - run: make tarballs
+            - run: make docker-tarballs
             - uses: ncipollo/release-action@v1
               with:
                   artifacts: tarballs/*.tar.gz
                   tag: ${{ steps.tag.outputs.tag }}
+
