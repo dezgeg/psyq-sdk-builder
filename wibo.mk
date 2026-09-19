@@ -1,0 +1,3 @@
+wibo/build/wibo:
+	cmake wibo -B wibo/build -DCMAKE_BUILD_TYPE=Release -DMI_OVERRIDE=OFF -DCMAKE_CXX_FLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0" -DCMAKE_FIND_LIBRARY_SUFFIXES=".a" -DCMAKE_EXE_LINKER_FLAGS="-static"
+	make -C wibo/build
