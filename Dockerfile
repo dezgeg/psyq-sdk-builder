@@ -5,6 +5,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
+    clang \
+    lld \
+    libclang-dev \
+    python3-venv \
     gcc-multilib \
     g++-multilib \
     7zip \
